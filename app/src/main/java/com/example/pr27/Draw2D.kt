@@ -4,13 +4,13 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Path
 import android.graphics.Typeface
+import android.media.Image
 import android.view.View
 
 class Draw2D(context: Context?) : View(context) {
 
-    private val catPaint: Paint = Paint()
+    private val paint: Paint = Paint()
     private val backgroundPaint: Paint = Paint()
 
     init {
@@ -26,37 +26,40 @@ class Draw2D(context: Context?) : View(context) {
         val offsetX = width / 2F
         val offsetY = height / 2F
 
-        // Заливка заднего фона
-        canvas.drawCircle(offsetX, offsetY, Math.max(width, height) / 2F, backgroundPaint)
+        paint.apply {
+            style = Paint.Style.FILL
+            color = backgroundPaint.color
+        }
+
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
 
         // Тело кота
-        catPaint.color = Color.WHITE
-        canvas.drawCircle(offsetX, offsetY, 100 * dpiScaleFactor, catPaint)
+        paint.color = Color.WHITE
+        canvas.drawCircle(offsetX, offsetY, 100 * dpiScaleFactor, paint)
 
-        // Голова кота
-        canvas.drawCircle(offsetX, offsetY - 150 * dpiScaleFactor, 80 * dpiScaleFactor, catPaint)
+        // Голова
+        canvas.drawCircle(offsetX, offsetY - 150 * dpiScaleFactor, 80 * dpiScaleFactor, paint)
 
         // Глаза
-        catPaint.color = Color.BLACK
-        canvas.drawCircle(offsetX - 30 * dpiScaleFactor, offsetY - 170 * dpiScaleFactor, 8 * dpiScaleFactor, catPaint)
-        canvas.drawCircle(offsetX + 30 * dpiScaleFactor, offsetY - 170 * dpiScaleFactor, 8 * dpiScaleFactor, catPaint)
+        paint.color = Color.BLACK
+        canvas.drawCircle(offsetX - 30 * dpiScaleFactor, offsetY - 170 * dpiScaleFactor, 8 * dpiScaleFactor, paint)
+        canvas.drawCircle(offsetX + 30 * dpiScaleFactor, offsetY - 170 * dpiScaleFactor, 8 * dpiScaleFactor, paint)
 
         // Нос
-        catPaint.color = Color.BLACK
-        canvas.drawCircle(offsetX, offsetY - 150 * dpiScaleFactor, 5 * dpiScaleFactor, catPaint)
+        paint.color = Color.BLACK
+        canvas.drawCircle(offsetX, offsetY - 150 * dpiScaleFactor, 5 * dpiScaleFactor, paint)
 
         // Рот
-        catPaint.color = Color.RED
-        catPaint.strokeWidth = 5 * dpiScaleFactor
-        canvas.drawLine(offsetX - 10 * dpiScaleFactor, offsetY - 140 * dpiScaleFactor, offsetX + 10 * dpiScaleFactor, offsetY - 140 * dpiScaleFactor, catPaint)
+        paint.color = Color.RED
+        paint.strokeWidth = 5 * dpiScaleFactor
+        canvas.drawLine(offsetX - 10 * dpiScaleFactor, offsetY - 140 * dpiScaleFactor, offsetX + 10 * dpiScaleFactor, offsetY - 140 * dpiScaleFactor, paint)
 
         // шапка
         val path = android.graphics.Path()
         path.moveTo(offsetX - 40 * dpiScaleFactor, offsetY - 220 * dpiScaleFactor)
         path.lineTo(offsetX, offsetY - 280 * dpiScaleFactor)
         path.lineTo(offsetX + 40 * dpiScaleFactor, offsetY - 220 * dpiScaleFactor)
-        canvas.drawPath(path, catPaint)
-
+        canvas.drawPath(path, paint)
 
 
         // Надпись
@@ -66,7 +69,10 @@ class Draw2D(context: Context?) : View(context) {
             typeface = Typeface.DEFAULT_BOLD
             textAlign = Paint.Align.CENTER
         }
-
         canvas.drawText("СНЕГОВИК", offsetX, offsetY + 150 * dpiScaleFactor, textPaint)
+
+        //повернутый текст
+        canvas.rotate(/* degrees = */ 90F, /* px = */ offsetX, /* py = */ offsetY + 150 * dpiScaleFactor,)
+        canvas.drawText("СНЕГОВИК", offsetX, offsetY + 160 * dpiScaleFactor, textPaint)
     }
 }
